@@ -1,5 +1,4 @@
-name: "Terraform Plan CI"
-run: terraform init -upgrade
+name: "Infrastructure CI Trigger"
 
 
 
@@ -7,11 +6,15 @@ on:
 
   push:
 
-    branches: [ "main" ]
+    branches:
+
+      - main
 
   pull_request:
 
-    branches: [ "main" ]
+    branches:
+
+      - main
 
 
 
@@ -25,7 +28,7 @@ jobs:
 
     
 
-    # Set environment variables for AWS credentials
+    # Environment variables for AWS Authentication
 
     env:
 
@@ -49,11 +52,23 @@ jobs:
 
         uses: hashicorp/setup-terraform@v3
 
+        with:
+
+          terraform_version: "1.7.0" # Locking version for consistency
+
 
 
       - name: Terraform Init
 
-        run: terraform init
+        # The -upgrade flag is the "magic" fix for your module error
+
+        run: terraform init -upgrade
+
+
+
+      - name: Terraform Format Check
+
+        run: terraform fmt -check
 
 
 
@@ -61,11 +76,15 @@ jobs:
 
         id: plan
 
-        run: terraform plan -out=tfplan # Saves the plan to a file
+        # -out=tfplan saves the result to a file as required by your project
+
+        run: terraform plan -no-color -out=tfplan
 
 
 
       - name: Upload Plan Artifact
+
+        # This fulfills the "Upload plan artifact" task in your project
 
         uses: actions/upload-artifact@v4
 
