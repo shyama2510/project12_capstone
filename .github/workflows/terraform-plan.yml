@@ -1,4 +1,5 @@
 name: "Terraform Plan CI"
+run: terraform init -upgrade
 
 
 
