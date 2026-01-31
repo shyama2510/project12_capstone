@@ -1,19 +1,7 @@
-resource "aws_s3_bucket" "this" {
+module "website_bucket" {
 
-  bucket = var.bucket_name
+  source      = "./modules/s3_bucket"
 
-}
-
-
-
-resource "aws_s3_bucket_versioning" "this" {
-
-  bucket = aws_s3_bucket.this.id
-
-  versioning_configuration {
-
-    status = "Enabled"
-
-  }
+  bucket_name = "shyama-unique-ci-project-bucket-2026"
 
 }
